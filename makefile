@@ -1,7 +1,7 @@
-CC = gcc
-CFLAGS = -Wall -std=c99
+CC = g++
+CFLAGS = -Wall
 LDFLAGS = -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
-SRC = src/main.c
+SRC = src/main.cpp
 BUILD_DIR = build
 
 .PHONY: all clean raylib
