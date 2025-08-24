@@ -5,6 +5,8 @@
 float secs = 0;
 int mins = 0;
 
+bool timerOn = false;
+
 int main(void)
 {
     int screenWidth = 250;
@@ -25,7 +27,10 @@ int main(void)
 
     while (!WindowShouldClose())
     {
-        secs += GetFrameTime();
+        if (IsKeyPressed(KEY_BACKSLASH)) timerOn = !timerOn;
+        if (IsKeyPressed(KEY_MINUS)) {timerOn = false; secs = 0; mins = 0;}
+
+        if (timerOn) secs += GetFrameTime();
 
         SetWindowPosition(GetMonitorWidth(0)/2 - screenWidth/2, 0);
 
