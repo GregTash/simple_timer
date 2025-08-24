@@ -25,9 +25,11 @@ int main(void)
     // Grab keys globally (Numpad 1 and Numpad 2)
     int np1Key = XKeysymToKeycode(display, XK_KP_1);
     int np2Key = XKeysymToKeycode(display, XK_KP_2);
+    int np3Key = XKeysymToKeycode(display, XK_KP_3);
 
     XGrabKey(display, np1Key, AnyModifier, root, True, GrabModeAsync, GrabModeAsync);
     XGrabKey(display, np2Key, AnyModifier, root, True, GrabModeAsync, GrabModeAsync);
+    XGrabKey(display, np3Key, AnyModifier, root, True, GrabModeAsync, GrabModeAsync);
 
     XSelectInput(display, root, KeyPressMask);
 
@@ -57,6 +59,11 @@ int main(void)
                 }
                 else if (keycode == np2Key) {
                     timerOn = false;      // Reset
+                    secs = 0;
+                    mins = 0;
+                }
+                else if (keycode == np3Key) {
+                    timerOn = true;
                     secs = 0;
                     mins = 0;
                 }
