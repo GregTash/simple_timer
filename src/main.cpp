@@ -7,9 +7,7 @@
 #include <X11/keysym.h>
 #undef Font
 
-
-int milliseconds = 0;
-int secs = 0;
+float secs = 0;
 int mins = 0;
 
 bool timerOn = false;
@@ -23,7 +21,6 @@ int main(void)
     }
     Window root = DefaultRootWindow(display);
 
-    // Grab keys globally (Numpad 1 and Numpad 2)
     int np1Key = XKeysymToKeycode(display, XK_KP_1);
     int np2Key = XKeysymToKeycode(display, XK_KP_2);
     int np3Key = XKeysymToKeycode(display, XK_KP_3);
@@ -34,7 +31,6 @@ int main(void)
 
     XSelectInput(display, root, KeyPressMask);
 
-    // --- Raylib setup ---
     int screenWidth = 250;
     int screenHeight = 50;
 
@@ -49,38 +45,30 @@ int main(void)
 
     while (!WindowShouldClose())
     {
-        // --- Check global hotkeys ---
         while (XPending(display)) {
             XEvent event;
             XNextEvent(display, &event);
             if (event.type == KeyPress) {
                 int keycode = event.xkey.keycode;
                 if (keycode == np1Key) {
-                    timerOn = !timerOn;   // Toggle pause/start
+                    timerOn = !timerOn;
                 }
                 else if (keycode == np2Key) {
-                    timerOn = false;      // Reset
-                    milliseconds = 0;
+                    timerOn = false;
                     secs = 0;
                     mins = 0;
                 }
                 else if (keycode == np3Key) {
                     timerOn = true;
-                    milliseconds = 0;
                     secs = 0;
                     mins = 0;
                 }
             }
         }
 
-        if (timerOn) milliseconds += GetFrameTime() * 1000;
+        if (timerOn) secs += GetFrameTime();
 
         SetWindowPosition(GetMonitorWidth(0)/2 - screenWidth/2, 0);
-
-        if (milliseconds >= 1000) {
-            milliseconds = 0;
-            secs += 1;
-        }
 
         if (secs >= 60) {
             secs = 0;
@@ -91,8 +79,7 @@ int main(void)
         stream.precision(2);
         stream
             << std::setfill('0') << std::setw(2) << mins << ":"
-            << std::setw(2) << secs << "."
-            << std::fixed << milliseconds/10;
+            << std::fixed << secs;
 
         BeginDrawing();
             Color col = {0,0,0,150};
