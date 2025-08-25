@@ -8,7 +8,8 @@
 #undef Font
 
 
-float secs = 0;
+int milliseconds = 0;
+int secs = 0;
 int mins = 0;
 
 bool timerOn = false;
@@ -59,20 +60,27 @@ int main(void)
                 }
                 else if (keycode == np2Key) {
                     timerOn = false;      // Reset
+                    milliseconds = 0;
                     secs = 0;
                     mins = 0;
                 }
                 else if (keycode == np3Key) {
                     timerOn = true;
+                    milliseconds = 0;
                     secs = 0;
                     mins = 0;
                 }
             }
         }
 
-        if (timerOn) secs += GetFrameTime();
+        if (timerOn) milliseconds += GetFrameTime() * 1000;
 
         SetWindowPosition(GetMonitorWidth(0)/2 - screenWidth/2, 0);
+
+        if (milliseconds >= 1000) {
+            milliseconds = 0;
+            secs += 1;
+        }
 
         if (secs >= 60) {
             secs = 0;
@@ -83,7 +91,8 @@ int main(void)
         stream.precision(2);
         stream
             << std::setfill('0') << std::setw(2) << mins << ":"
-            << std::fixed << secs;
+            << std::setw(2) << secs << "."
+            << std::fixed << milliseconds/10;
 
         BeginDrawing();
             Color col = {0,0,0,150};
